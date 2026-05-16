@@ -192,6 +192,33 @@ textarea::placeholder,input::placeholder{color:var(--t3)}
 /* FLASH */
 #flash{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:12px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.2)}
 #flash.err{background:var(--red)}
+
+  /* ── DRAFT BANNER ── */
+  .draft-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--card); border-top: 1px solid var(--border);
+    padding: 10px 40px; display: flex; align-items: center;
+    justify-content: space-between; z-index: 300;
+    box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+  }
+  .draft-left { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--t2); }
+  .draft-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--t3); flex-shrink: 0; }
+  .draft-dot.saved { background: #2d6a4f; animation: pulse2 2s infinite; }
+  @keyframes pulse2 { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .draft-time { font-size: 12px; color: var(--t3); }
+  .draft-actions { display: flex; gap: 8px; }
+  .draft-btn {
+    padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; font-family: 'Onest', sans-serif;
+    transition: all var(--tr);
+  }
+  .draft-clear { background: transparent; color: var(--t2); border: 1px solid var(--border); }
+  .draft-clear:hover { border-color: var(--border2); color: var(--text); }
+  .draft-save { background: var(--text); color: #fff; }
+  .draft-save:hover { background: #333; }
+  main { padding-bottom: 120px; }
+  @media(max-width:600px){ .draft-bar { padding: 10px 16px; } .draft-time { display:none; } }
+
 </style>
 </head>
 <body>
@@ -689,7 +716,7 @@ textarea::placeholder,input::placeholder{color:var(--t3)}
 
   <div class="navrow">
     <button class="btn bbk" onclick="go(11,10)">← Назад</button>
-    <button class="btn bsb" onclick="submit()">Отправить бриф →</button>
+    <button class="btn bsb" onclick="submit()">📄 Скачать бриф и отправить →</button>
   </div>
 </div>
 
@@ -712,6 +739,20 @@ textarea::placeholder,input::placeholder{color:var(--t3)}
   </div>
 </div>
 
+
+<!-- DRAFT BAR -->
+<div class="draft-bar" id="draft-bar">
+  <div class="draft-left">
+    <div class="draft-dot" id="draft-dot"></div>
+    <span id="draft-status">Черновик не сохранён</span>
+    <span class="draft-time" id="draft-time"></span>
+  </div>
+  <div class="draft-actions">
+    <button class="draft-btn draft-clear" onclick="clearDraft()">Очистить черновик</button>
+    <button class="draft-btn draft-save" onclick="saveDraft()">💾 Сохранить черновик</button>
+  </div>
+</div>
+
 </main>
 <div id="flash"></div>
 
@@ -719,7 +760,7 @@ textarea::placeholder,input::placeholder{color:var(--t3)}
 // ══════════════════════════════════════
 // CONFIG — вставьте свои данные
 // ══════════════════════════════════════
-const FORMSPREE_URL = 'https://formspree.io/f/xojrgyrg'; // vitaly.gavrilov75@gmail.com
+// Email: vitaly.gavrilov75@gmail.com
 
 // ══════════════════════════════════════
 // STATE
@@ -977,127 +1018,236 @@ function showTY() {
 // PROMPT BUILD + TELEGRAM
 // ══════════════════════════════════════
 function buildPrompt() {
-  const densL={'1':'предельно минималистичный — максимум воздуха','2':'лаконичный','3':'сбалансированный','4':'насыщенный','5':'максимально детализированный'};
+  const dv = {'desktop':'С компьютера','mobile':'С телефона','both':'Везде'};
+  const gv = {'lead':'Получить заявку / заполнить форму','call':'Позвонить или написать напрямую','buy':'Купить / оплатить онлайн','subscribe':'Подписаться на рассылку или канал','trust':'Сформировать доверие, запомниться','view':'Посмотреть портфолио и принять решение'};
+  const bv = {'До 50 000 руб.':'До 50 000 ₽','50 000 — 150 000 руб.':'50 000 — 150 000 ₽','150 000 — 500 000 руб.':'150 000 — 500 000 ₽','Более 500 000 руб.':'Более 500 000 ₽','Бюджет не определён — жду предложение':'Не определён, жду предложение'};
+  const denv = {'1':'Очень воздушный — минимум элементов','2':'Лаконичный','3':'Сбалансированный','4':'Насыщенный','5':'Максимально детализированный'};
+
+  const sep = '─'.repeat(50);
   const lines = [];
 
-  lines.push(`ТИП ПРОЕКТА\n${S.siteType||'Не указан'}`,'');
+  lines.push('БРИФ НА РАЗРАБОТКУ САЙТА');
+  lines.push(sep);
+  lines.push('');
 
-  // О компании
-  const co=[];
-  co.push(`Название: ${S.name}`);
-  if(S.cursite) co.push(`Текущий сайт: ${S.cursite}`);
-  if(S.newdomain) co.push(`Планируемый домен: ${S.newdomain}`);
-  co.push(`Деятельность: ${S.what}`);
-  if(S.diff) co.push(`Главное отличие от конкурентов: ${S.diff}`);
-  if(S.products) co.push(`Продукты и услуги: ${S.products}`);
-  lines.push(`О КОМПАНИИ\n${co.join('\n')}`,'');
-
-  // Аудитория и цели
-  const au=[];
-  au.push(`Идеальный клиент: ${S.audience}`);
-  if(S.targetgroup) au.push(`Целевая группа: ${S.targetgroup}`);
-  if(S.pain) au.push(`Боль / страх клиента: ${S.pain}`);
-  if(S.goal) au.push(`Главная цель: ${goalL[S.goal]||S.goal}`);
-  if(S.kpi) au.push(`Желаемый результат / KPI: ${S.kpi}`);
-  if(S.device) au.push(`Устройство: ${devL[S.device]||S.device}`);
-  lines.push(`АУДИТОРИЯ И ЦЕЛИ\n${au.join('\n')}`,'');
-
-  // Конкуренты
-  if(S.comps?.length) {
-    const cl=S.comps.filter(c=>c.url||c.note).map(c=>`  • ${c.url}${c.note?' — '+c.note:''}`).join('\n');
-    if(cl) lines.push(`КОНКУРЕНТЫ\n${cl}`,'');
+  lines.push('РАЗДЕЛ 1. ИНФОРМАЦИЯ О КОМПАНИИ');
+  lines.push('');
+  lines.push('Название: ' + (S.name||'—'));
+  lines.push('Контактное лицо: ' + (S.cname||'—'));
+  lines.push('Контакт (email/telegram): ' + (S.contact||'—'));
+  if(S.phone) lines.push('Телефон: ' + S.phone);
+  if(S.cursite) lines.push('Текущий сайт: ' + S.cursite);
+  if(S.newdomain) lines.push('Планируемый домен: ' + S.newdomain);
+  lines.push('');
+  lines.push('Чем занимается компания:');
+  lines.push(S.what||'—');
+  lines.push('');
+  if(S.diff) {
+    lines.push('Главное отличие от конкурентов:');
+    lines.push(S.diff);
+    lines.push('');
   }
-  if(S.partners?.length) {
-    const pl=S.partners.filter(c=>c.url||c.note).map(c=>`  • ${c.url}${c.note?' — '+c.note:''}`).join('\n');
-    if(pl) lines.push(`ПАРТНЁРЫ И СИМПАТИЧНЫЕ КОМПАНИИ\n${pl}`,'');
-  }
-  if(S.vscomp) lines.push(`ЧЕМ ДОЛЖЕН ОТЛИЧАТЬСЯ ОТ КОНКУРЕНТОВ\n${S.vscomp}`,'');
-
-  // Референсы
-  if(S.refs?.length) {
-    const rl=S.refs.filter(r=>r.url||r.note).map(r=>`  • ${r.url}${r.note?' — '+r.note:''}`).join('\n');
-    if(rl) lines.push(`ВИЗУАЛЬНЫЕ РЕФЕРЕНСЫ\n${rl}`,'');
-  }
-  if(S.screennote) lines.push(`КОММЕНТАРИЙ К СКРИНШОТАМ\n${S.screennote}`,'');
-  if(S.uploadedScreens?.length) lines.push(`ЗАГРУЖЕННЫЕ СКРИНШОТЫ\n${S.uploadedScreens.map(n=>'  • '+n).join('\n')}`,'');
-
-  // Фирменный стиль
-  if(S.assets?.length||S.brandcolors) {
-    const br=[];
-    if(S.assets?.length) br.push(`Есть: ${S.assets.join(', ')}`);
-    if(S.brandcolors) br.push(`Цвета бренда: ${S.brandcolors}`);
-    if(S.uploadedBrand?.length) br.push(`Загруженные файлы: ${S.uploadedBrand.join(', ')}`);
-    lines.push(`ФИРМЕННЫЙ СТИЛЬ\n${br.join('\n')}`,'');
+  if(S.products) {
+    lines.push('Продукты и услуги:');
+    lines.push(S.products);
+    lines.push('');
   }
 
-  // Характер
-  const ch=[];
-  if(S.moods?.length) ch.push(`Настроение: ${S.moods.join(', ')}`);
-  if(S.persona) ch.push(`Бренд как человек: ${S.persona}`);
-  if(S.tov) ch.push(`Tone of voice: ${S.tov}`);
-  if(ch.length) lines.push(`ХАРАКТЕР БРЕНДА\n${ch.join('\n')}`,'');
-
-  // Визуальный стиль
-  const vs=[];
-  if(S.colorScheme) vs.push(`Цветовая схема: ${S.colorScheme}`);
-  if(S.nocolors) vs.push(`Запрещённые цвета: ${S.nocolors}`);
-  if(S.density) vs.push(`Насыщенность: ${densL[S.density]||S.density}`);
-  if(S.styletype) vs.push(`Стилистика: ${S.styletype}`);
-  vs.push('Типографика: использовать выразительный шрифт с характером — не Inter, Roboto, Arial');
-  lines.push(`ВИЗУАЛЬНЫЙ СТИЛЬ\n${vs.join('\n')}`,'');
-
-  // Структура
-  if(S.blocks?.length) {
-    lines.push(`СТРУКТУРА САЙТА\n${S.blocks.map((b,i)=>`${i+1}. ${b}`).join('\n')}`,'');
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 2. АУДИТОРИЯ И ЦЕЛИ');
+  lines.push('');
+  lines.push('Портрет идеального клиента:');
+  lines.push(S.audience||'—');
+  lines.push('');
+  if(S.targetgroup) {
+    lines.push('Целевая группа: ' + S.targetgroup);
+    lines.push('');
   }
-  if(S.structure) lines.push(`СТРУКТУРА (СВОИМИ СЛОВАМИ)\n${S.structure}`,'');
+  if(S.pain) {
+    lines.push('Боль и страх клиента:');
+    lines.push(S.pain);
+    lines.push('');
+  }
+  lines.push('Главная цель сайта: ' + (gv[S.goal]||S.goal||'—'));
+  if(S.kpi) {
+    lines.push('');
+    lines.push('Желаемый результат / KPI:');
+    lines.push(S.kpi);
+  }
+  if(S.device) lines.push('');
+  if(S.device) lines.push('Устройство клиента: ' + (dv[S.device]||S.device));
+  lines.push('');
 
-  // Функции
-  if(S.features?.length) lines.push(`ФУНКЦИОНАЛЬНОСТЬ\n${S.features.map(f=>'— '+f).join('\n')}`,'');
-  if(S.support) lines.push(`ПОДДЕРЖКА САЙТА ПОСЛЕ ЗАПУСКА\n${S.support}`,'');
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 3. КОНКУРЕНТЫ И РЫНОК');
+  lines.push('');
+  if(S.comps && S.comps.filter(c=>c.url||c.note).length) {
+    lines.push('Сайты конкурентов:');
+    S.comps.filter(c=>c.url||c.note).forEach((c,i) => {
+      lines.push((i+1) + '. ' + (c.url||'без ссылки'));
+      if(c.note) lines.push('   Комментарий: ' + c.note);
+    });
+    lines.push('');
+  } else {
+    lines.push('Конкуренты: не указаны');
+    lines.push('');
+  }
+  if(S.partners && S.partners.filter(c=>c.url||c.note).length) {
+    lines.push('Партнёры / симпатичные компании:');
+    S.partners.filter(c=>c.url||c.note).forEach((c,i) => {
+      lines.push((i+1) + '. ' + (c.url||'без ссылки'));
+      if(c.note) lines.push('   Комментарий: ' + c.note);
+    });
+    lines.push('');
+  }
+  if(S.vscomp) {
+    lines.push('Чем должен отличаться наш сайт от конкурентов:');
+    lines.push(S.vscomp);
+    lines.push('');
+  }
 
-  // Бюджет и сроки
-  const bs=[];
-  if(S.budget) bs.push(`Бюджет: ${S.budget}`);
-  if(S.timeline) bs.push(`Сроки: ${S.timeline}`);
-  if(S.seo) bs.push(`SEO: ${S.seo}`);
-  if(S.ads) bs.push(`Реклама: ${S.ads}`);
-  if(bs.length) lines.push(`БЮДЖЕТ И СРОКИ\n${bs.join('\n')}`,'');
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 4. ВИЗУАЛЬНЫЕ РЕФЕРЕНСЫ');
+  lines.push('');
+  if(S.refs && S.refs.filter(r=>r.url||r.note).length) {
+    lines.push('Сайты которые нравятся визуально:');
+    S.refs.filter(r=>r.url||r.note).forEach((r,i) => {
+      lines.push((i+1) + '. ' + (r.url||'без ссылки'));
+      if(r.note) lines.push('   Что нравится: ' + r.note);
+    });
+    lines.push('');
+  } else {
+    lines.push('Визуальные референсы: не указаны');
+    lines.push('');
+  }
+  if(S.screennote) {
+    lines.push('Комментарий к скриншотам:');
+    lines.push(S.screennote);
+    lines.push('');
+  }
 
-  // Запреты
-  const no=[];
-  if(S.no) no.push(S.no);
-  no.push('никаких фиолетовых / синих градиентов','никаких стоковых иллюстраций','сайт не должен выглядеть как типичный AI-сайт','никаких шрифтов Inter Roboto Arial','нестандартная компоновка хотя бы в одном блоке');
-  lines.push(`ЗАПРЕТЫ\n${no.map(n=>'— '+n).join('\n')}`,'');
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 5. ФИРМЕННЫЙ СТИЛЬ');
+  lines.push('');
+  if(S.assets && S.assets.length) {
+    lines.push('Что уже есть: ' + S.assets.join(', '));
+  } else {
+    lines.push('Фирменный стиль: не разработан, начинаем с нуля');
+  }
+  if(S.brandcolors) lines.push('Фирменные цвета: ' + S.brandcolors);
+  lines.push('');
 
-  if(S.tech) lines.push(`ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ\n${S.tech}`,'');
-  if(S.extra) lines.push(`ДОПОЛНИТЕЛЬНО\n${S.extra}`,'');
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 6. ХАРАКТЕР И НАСТРОЕНИЕ');
+  lines.push('');
+  if(S.moods && S.moods.length) {
+    lines.push('Настроение сайта: ' + S.moods.join(', '));
+    lines.push('');
+  }
+  if(S.persona) {
+    lines.push('Бренд как человек:');
+    lines.push(S.persona);
+    lines.push('');
+  }
+  if(S.tov) {
+    lines.push('Tone of voice (как разговаривает бренд):');
+    lines.push(S.tov);
+    lines.push('');
+  }
 
-  lines.push(`ДОПОЛНИТЕЛЬНЫЕ ТРЕБОВАНИЯ К ДИЗАЙНУ\n— Крупный выразительный заголовок на первом экране\n— Много воздуха между блоками\n— Мобильная версия обязательна\n— Сайт не должен выглядеть шаблонно`);
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 7. ВИЗУАЛЬНЫЙ СТИЛЬ');
+  lines.push('');
+  if(S.colorScheme) lines.push('Цветовая схема: ' + S.colorScheme);
+  if(S.nocolors) lines.push('Цвета которых не должно быть: ' + S.nocolors);
+  if(S.density) lines.push('Насыщенность дизайна: ' + (denv[S.density]||S.density));
+  if(S.styletype) lines.push('Стилистика: ' + S.styletype);
+  lines.push('');
+
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 8. СТРУКТУРА САЙТА');
+  lines.push('');
+  if(S.blocks && S.blocks.length) {
+    lines.push('Необходимые разделы:');
+    S.blocks.forEach((b,i) => lines.push((i+1) + '. ' + b));
+    lines.push('');
+  }
+  if(S.structure) {
+    lines.push('Структура своими словами:');
+    lines.push(S.structure);
+    lines.push('');
+  }
+
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 9. ФУНКЦИОНАЛЬНОСТЬ');
+  lines.push('');
+  if(S.features && S.features.length) {
+    lines.push('Необходимые функции:');
+    S.features.forEach((f,i) => lines.push((i+1) + '. ' + f));
+  } else {
+    lines.push('Дополнительные функции: не выбраны');
+  }
+  if(S.support) {
+    lines.push('');
+    lines.push('Поддержка сайта после запуска: ' + S.support);
+  }
+  lines.push('');
+
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 10. БЮДЖЕТ И СРОКИ');
+  lines.push('');
+  if(S.budget) lines.push('Бюджет: ' + (bv[S.budget]||S.budget));
+  if(S.timeline) lines.push('Желаемые сроки: ' + S.timeline);
+  if(S.seo) lines.push('SEO-продвижение: ' + S.seo);
+  if(S.ads) lines.push('Реклама: ' + S.ads);
+  lines.push('');
+
+  lines.push(sep);
+  lines.push('РАЗДЕЛ 11. ДОПОЛНИТЕЛЬНО');
+  lines.push('');
+  if(S.no) {
+    lines.push('Чего не должно быть на сайте:');
+    lines.push(S.no);
+    lines.push('');
+  }
+  if(S.tech) {
+    lines.push('Технические требования:');
+    lines.push(S.tech);
+    lines.push('');
+  }
+  if(S.extra) {
+    lines.push('Дополнительные пожелания:');
+    lines.push(S.extra);
+    lines.push('');
+  }
+
+  lines.push(sep);
+  lines.push('Бриф заполнен. Дата: ' + new Date().toLocaleDateString('ru-RU'));
+  lines.push(sep);
 
   return lines.join('\n');
 }
 
 async function sendTG() {
-  const prompt = buildPrompt();
-  const body = new FormData();
-  body.append('_subject', '🔥 Новый бриф на сайт — ' + (S.name||'без названия'));
-  body.append('Клиент', S.cname||'—');
-  body.append('Контакт', S.contact + (S.phone?' | '+S.phone:''));
-  body.append('Компания', S.name||'—');
-  body.append('Тип сайта', S.siteType||'—');
-  body.append('ПРОМПТ ДЛЯ CLAUDE DESIGN', prompt);
-  body.append('_replyto', S.contact||'');
+  const text = buildPrompt();
 
-  try {
-    const res = await fetch(FORMSPREE_URL, {
-      method: 'POST',
-      body: body,
-      headers: { 'Accept': 'application/json' }
-    });
-    const data = await res.json();
-    if(!data.ok) console.error('Formspree error:', data);
-  } catch(e){ console.error('Email error:',e); }
+  // 1. Скачать текстовый файл
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'бриф-' + (S.name||'клиент').replace(/[^а-яёa-z0-9]/gi,'_') + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  // 2. Открыть почту с заполненным письмом
+  setTimeout(() => {
+    const subject = encodeURIComponent('Бриф на разработку сайта — ' + (S.name||''));
+    const body = encodeURIComponent(text);
+    window.location.href = 'mailto:vitaly.gavrilov75@gmail.com?subject=' + subject + '&body=' + body;
+  }, 1000);
 }
 
 // ══════════════════════════════════════
@@ -1110,6 +1260,229 @@ function flash(msg, err=false) {
   el.style.display='block';
   setTimeout(()=>el.style.display='none', 2800);
 }
+
+// ══════════════════════════════════════
+// DRAFT SYSTEM — автосохранение
+// ══════════════════════════════════════
+const DRAFT_KEY = 'brief_draft_v1';
+
+function saveDraft() {
+  // Собираем текущие значения всех полей
+  const fields = ['f-name','f-cname','f-cursite','f-newdomain','f-what','f-diff',
+    'f-products','f-aud','f-targetgroup','f-pain','f-kpi','f-persona','f-tov',
+    'f-colors','f-brandcolors','f-nocolors','f-refs','f-screennote','f-structure',
+    'f-vs','f-no','f-tech','f-extra','f-contact','f-phone'];
+
+  const fieldVals = {};
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) fieldVals[id] = el.value;
+  });
+
+  // Собираем референсы
+  const refs = {}; 
+  ['ref-table','comp-table','partner-table'].forEach(tid => {
+    const rows = document.querySelectorAll(`#${tid} .ref-row`);
+    refs[tid] = [];
+    rows.forEach(row => {
+      refs[tid].push({
+        url: row.querySelector('.ref-url')?.value||'',
+        note: row.querySelector('.ref-note')?.value||''
+      });
+    });
+  });
+
+  const draft = {
+    step: cur,
+    state: {...S},
+    fields: fieldVals,
+    refs: refs,
+    savedAt: new Date().toISOString()
+  };
+
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  updateDraftUI(true);
+}
+
+function loadDraft() {
+  const raw = localStorage.getItem(DRAFT_KEY);
+  if(!raw) return;
+
+  try {
+    const draft = JSON.parse(raw);
+
+    // Восстанавливаем state
+    Object.assign(S, draft.state);
+
+    // Восстанавливаем поля
+    Object.entries(draft.fields||{}).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if(el) el.value = val;
+    });
+
+    // Восстанавливаем выборы карточек
+    if(S.siteType) restoreCard('siteType', S.siteType);
+    if(S.goal) restoreCard('goal', S.goal);
+    if(S.device) restoreCard('device', S.device);
+    if(S.styletype) restoreCard('styletype', S.styletype);
+    if(S.budget) restoreCard('budget', S.budget);
+    if(S.timeline) restoreCard('timeline', S.timeline);
+    if(S.seo) restoreCard('seo', S.seo);
+    if(S.ads) restoreCard('ads', S.ads);
+    if(S.support) restoreCard('support', S.support);
+
+    // Восстанавливаем mood теги
+    if(S.moods?.length) {
+      document.querySelectorAll('.mtag').forEach(tag => {
+        if(S.moods.includes(tag.dataset.v)) tag.classList.add('on');
+      });
+    }
+
+    // Восстанавливаем фичи
+    if(S.features?.length) {
+      document.querySelectorAll('[data-k="features"]').forEach(card => {
+        if(S.features.includes(card.dataset.v)) card.classList.add('sel');
+      });
+    }
+
+    // Восстанавливаем assets
+    if(S.assets?.length) {
+      document.querySelectorAll('.asset-card').forEach(card => {
+        if(S.assets.includes(card.dataset.v)) card.classList.add('on');
+      });
+    }
+
+    // Восстанавливаем цвет
+    if(S.colorScheme) {
+      document.querySelectorAll('.cchip').forEach(chip => {
+        if(chip.dataset.v === S.colorScheme) chip.classList.add('on');
+      });
+    }
+
+    // Восстанавливаем density
+    if(S.density) {
+      document.querySelectorAll('#density .sdot').forEach(dot => {
+        if(dot.dataset.v === S.density) dot.classList.add('on');
+      });
+    }
+
+    // Восстанавливаем блоки
+    document.querySelectorAll('.trow').forEach(row => {
+      if(S.blocks?.includes(row.dataset.v)) {
+        row.classList.add('on');
+      } else {
+        row.classList.remove('on');
+      }
+    });
+
+    // Восстанавливаем референсы
+    if(draft.refs) {
+      ['ref-table','comp-table','partner-table'].forEach(tid => {
+        const prefix = tid.replace('-table','');
+        const table = document.getElementById(tid);
+        if(!table || !draft.refs[tid]?.length) return;
+        table.innerHTML = '';
+        draft.refs[tid].forEach(r => {
+          addRef(tid, prefix);
+          const rows = table.querySelectorAll('.ref-row');
+          const last = rows[rows.length-1];
+          if(last) {
+            last.querySelector('.ref-url').value = r.url||'';
+            last.querySelector('.ref-note').value = r.note||'';
+          }
+        });
+      });
+    }
+
+    // Переходим на нужный шаг
+    const savedStep = draft.step || 1;
+    go(1, savedStep);
+
+    updateDraftUI(true, draft.savedAt);
+    showDraftNotice(savedStep);
+
+  } catch(e) {
+    console.error('Draft load error:', e);
+  }
+}
+
+function restoreCard(key, val) {
+  document.querySelectorAll(`[data-k="${key}"]`).forEach(card => {
+    if(card.dataset.v === val) card.classList.add('sel');
+  });
+}
+
+function clearDraft() {
+  if(!confirm('Очистить черновик и начать заново?')) return;
+  localStorage.removeItem(DRAFT_KEY);
+  location.reload();
+}
+
+function updateDraftUI(saved, isoTime) {
+  const dot = document.getElementById('draft-dot');
+  const status = document.getElementById('draft-status');
+  const time = document.getElementById('draft-time');
+  if(saved) {
+    dot.classList.add('saved');
+    status.textContent = 'Черновик сохранён';
+    if(isoTime) {
+      const d = new Date(isoTime);
+      time.textContent = d.toLocaleString('ru-RU', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    }
+  } else {
+    dot.classList.remove('saved');
+    status.textContent = 'Есть несохранённые изменения';
+    time.textContent = '';
+  }
+}
+
+function showDraftNotice(step) {
+  const notice = document.createElement('div');
+  notice.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#2d6a4f;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.2)';
+  notice.textContent = '✓ Черновик восстановлен — вы на шаге ' + step;
+  document.body.appendChild(notice);
+  setTimeout(() => notice.remove(), 3000);
+}
+
+// Автосохранение при вводе текста
+document.addEventListener('input', () => {
+  updateDraftUI(false);
+});
+
+// Автосохранение каждые 30 секунд
+setInterval(saveDraft, 30000);
+
+// Автосохранение при переходе между шагами
+const _origGo = go;
+window.go = function(from, to) {
+  _origGo(from, to);
+  saveDraft();
+};
+
+// Загружаем черновик при старте
+window.addEventListener('DOMContentLoaded', () => {
+  const raw = localStorage.getItem(DRAFT_KEY);
+  if(raw) {
+    try {
+      const draft = JSON.parse(raw);
+      const d = new Date(draft.savedAt);
+      const timeStr = d.toLocaleString('ru-RU', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      
+      const banner = document.createElement('div');
+      banner.style.cssText = 'position:fixed;top:70px;left:0;right:0;background:#1a1a1a;color:#fff;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;z-index:500;font-size:14px;';
+      banner.innerHTML = `
+        <span>📋 Найден незавершённый бриф от ${timeStr}</span>
+        <div style="display:flex;gap:10px">
+          <button onclick="this.closest('div[style]').remove();localStorage.removeItem('${DRAFT_KEY}')" style="padding:7px 16px;border-radius:7px;border:1px solid #555;background:transparent;color:#aaa;cursor:pointer;font-family:Onest,sans-serif;font-size:13px;font-weight:600">Начать заново</button>
+          <button onclick="loadDraft();this.closest('div[style]').remove()" style="padding:7px 16px;border-radius:7px;border:none;background:#c4391a;color:#fff;cursor:pointer;font-family:Onest,sans-serif;font-size:13px;font-weight:600">Продолжить →</button>
+        </div>
+      `;
+      document.body.appendChild(banner);
+      updateDraftUI(true, draft.savedAt);
+    } catch(e) {}
+  }
+});
+
 </script>
 </body>
 </html>
