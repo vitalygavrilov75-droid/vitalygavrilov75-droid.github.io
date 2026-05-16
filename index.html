@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Бриф на разработку сайта</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Onest:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:#f6f4f0;--card:#fff;--card2:#f0ede8;--border:#e0dbd3;--border2:#c5bfb7;
+  --red:#c4391a;--rs:rgba(196,57,26,.08);--text:#1a1a1a;--t2:#6b6560;--t3:#b0aaa3;
+  --green:#2d6a4f;--gs:#f0faf3;--r:14px;--tr:.2s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Onest',sans-serif;font-size:15px;line-height:1.65;min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200}
+.ti{max-width:820px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:62px}
+.brand{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:700;letter-spacing:-.01em}
+.brand em{color:var(--red);font-style:normal}
+.sbadge{background:var(--card2);border:1px solid var(--border);border-radius:100px;padding:5px 16px;font-size:12px;font-weight:600;color:var(--t2)}
+.sbadge b{color:var(--text)}
+.pbar{height:3px;background:var(--border)}
+.pfill{height:100%;background:var(--red);border-radius:0 2px 2px 0;transition:width .55s cubic-bezier(.4,0,.2,1)}
+
+/* MAIN */
+main{max-width:820px;margin:0 auto;padding:52px 40px 100px}
+@media(max-width:640px){.ti,main{padding-left:18px;padding-right:18px}main{padding-top:32px}}
+
+/* STEP */
+.step{display:none}
+.step.active{display:block;animation:fu .32s ease both}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';display:inline-block;width:20px;height:2px;background:var(--red);border-radius:1px}
+h1.st{font-family:'Unbounded',sans-serif;font-size:clamp(20px,3.5vw,30px);font-weight:700;line-height:1.2;margin-bottom:10px}
+.sd{color:var(--t2);font-size:14px;line-height:1.8;margin-bottom:36px;max-width:580px}
+
+/* HINT BOX */
+.hint{background:#fffbf0;border:1px solid #f0d890;border-radius:10px;padding:14px 18px;font-size:13px;color:#7a6400;line-height:1.7;margin-bottom:28px;display:flex;gap:10px;align-items:flex-start}
+.hint-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* FIELD */
+.field{margin-bottom:22px}
+.fl{display:block;font-size:13px;font-weight:600;color:var(--t2);margin-bottom:8px;letter-spacing:.02em}
+.fl sup{color:var(--red);font-size:10px}
+.fl small{font-weight:400;color:var(--t3);font-size:12px;margin-left:6px}
+textarea,input[type=text]{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'Onest',sans-serif;font-size:14px;padding:13px 16px;resize:vertical;transition:border-color var(--tr),box-shadow var(--tr);outline:none}
+textarea{min-height:96px}
+textarea:focus,input:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--rs)}
+textarea::placeholder,input::placeholder{color:var(--t3)}
+.char-hint{font-size:11px;color:var(--t3);margin-top:5px}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+
+/* CARDS */
+.cgrid{display:grid;gap:10px;margin-bottom:28px}
+.cgrid.c2{grid-template-columns:1fr 1fr}
+.cgrid.c3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:540px){.cgrid.c2,.cgrid.c3{grid-template-columns:1fr}}
+.card{position:relative;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 18px 16px 46px;cursor:pointer;transition:border-color var(--tr),box-shadow var(--tr),transform var(--tr);user-select:none}
+.card::before{content:'';position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;transition:all var(--tr);background:var(--card)}
+.card:hover{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,.06);transform:translateY(-1px)}
+.card.sel{border-color:var(--red);background:#fff9f7}
+.card.sel::before{background:var(--red);border-color:var(--red);box-shadow:inset 0 0 0 3px #fff9f7}
+.card.multi::before{border-radius:5px}
+.card.multi.sel::before{background:var(--red);border-color:var(--red);box-shadow:none}
+.card.multi.sel::after{content:'';position:absolute;left:20px;top:50%;transform:translateY(-62%) rotate(45deg);width:5px;height:9px;border-right:2px solid #fff;border-bottom:2px solid #fff}
+.ce{font-size:18px;margin-bottom:4px;display:block}
+.ct{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.cs{font-size:12px;color:var(--t2);line-height:1.5}
+
+/* MOOD TAGS */
+.mtags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.mtag{padding:8px 18px;border:1.5px solid var(--border);border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;transition:all var(--tr);background:var(--card);color:var(--t2);user-select:none}
+.mtag:hover{border-color:var(--border2);color:var(--text)}
+.mtag.on{border-color:var(--red);background:#fff9f7;color:var(--red)}
+
+/* COLOR CHIPS */
+.cchips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.cchip{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);transition:all var(--tr);user-select:none}
+.cchip:hover{border-color:var(--border2);color:var(--text)}
+.cchip.on{border-color:var(--red);background:#fff9f7;color:var(--text)}
+.cdot{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:1px solid rgba(0,0,0,.08)}
+
+/* SCALE */
+.sbox{margin-bottom:28px}
+.slabs{display:flex;justify-content:space-between;font-size:12px;color:var(--t2);margin-bottom:10px}
+.srow{display:flex;gap:6px}
+.sdot{flex:1;height:40px;background:var(--card);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--t3)}
+.sdot:hover{border-color:var(--border2);color:var(--t2)}
+.sdot.on{border-color:var(--red);background:#fff9f7;color:var(--red)}
+
+/* TOGGLES */
+.tlist{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+.trow{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 18px;cursor:pointer;transition:border-color var(--tr);user-select:none}
+.trow:hover{border-color:var(--border2)}
+.trow.on{border-color:rgba(196,57,26,.35);background:#fff9f7}
+.tleft{display:flex;align-items:center;gap:12px}
+.ticon{font-size:18px}
+.ttxt{font-size:14px;font-weight:600;color:var(--text)}
+.tsub{font-size:12px;color:var(--t2);margin-top:1px}
+.sw{width:40px;height:22px;background:var(--border2);border-radius:100px;position:relative;flex-shrink:0;transition:background var(--tr)}
+.trow.on .sw{background:var(--red)}
+.knob{position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left var(--tr);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.trow.on .knob{left:21px}
+
+/* MULTI HINT */
+.mhint{font-size:12px;color:var(--t3);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.mhint::before{content:'';display:inline-block;width:13px;height:13px;border:1.5px solid var(--t3);border-radius:4px;flex-shrink:0}
+
+/* REFS TABLE */
+.ref-table{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.ref-row{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;align-items:start}
+@media(max-width:560px){.ref-row{grid-template-columns:1fr;}}
+.ref-row input{margin:0}
+.ref-del{width:36px;height:36px;background:transparent;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);transition:all var(--tr);font-size:16px;line-height:1;margin-top:0;flex-shrink:0}
+.ref-del:hover{border-color:#e55;color:#e55}
+.add-ref{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:transparent;border:1.5px dashed var(--border2);border-radius:10px;color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;transition:all var(--tr);font-family:'Onest',sans-serif;margin-top:4px;margin-bottom:28px}
+.add-ref:hover{border-color:var(--red);color:var(--red)}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r);background:var(--card);padding:32px 24px;text-align:center;cursor:pointer;transition:all var(--tr);margin-bottom:8px;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--red);background:#fff9f7}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uz-icon{font-size:32px;margin-bottom:10px}
+.uz-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.uz-sub{font-size:12px;color:var(--t2)}
+.previews{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.prev-item{position:relative;width:88px;height:88px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.prev-item img{width:100%;height:100%;object-fit:cover}
+.prev-del{position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(0,0,0,.65);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:11px;line-height:1;border:none}
+
+/* BRAND ASSETS */
+.asset-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+@media(max-width:480px){.asset-grid{grid-template-columns:1fr}}
+.asset-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all var(--tr);user-select:none;display:flex;align-items:center;gap:12px}
+.asset-card:hover{border-color:var(--border2)}
+.asset-card.on{border-color:var(--red);background:#fff9f7}
+.asset-check{width:20px;height:20px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all var(--tr)}
+.asset-card.on .asset-check{background:var(--red);border-color:var(--red)}
+.asset-check svg{display:none}
+.asset-card.on .asset-check svg{display:block}
+.asset-info .at{font-size:13px;font-weight:600;color:var(--text)}
+.asset-info .as{font-size:12px;color:var(--t2)}
+
+/* NAV */
+.navrow{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:32px;border-top:1px solid var(--border)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:10px;font-family:'Onest',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all var(--tr)}
+.bbk{background:transparent;color:var(--t2);border:1.5px solid var(--border)}
+.bbk:hover{border-color:var(--border2);color:var(--text)}
+.bnx{background:var(--text);color:#fff}
+.bnx:hover{background:#333;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.bsb{background:var(--red);color:#fff}
+.bsb:hover{background:#a82e14;transform:translateY(-1px);box-shadow:0 4px 20px rgba(196,57,26,.3)}
+
+/* SECTION DIVIDER */
+.sdiv{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:12px 0 16px;border-top:1px solid var(--border);margin-top:8px;margin-bottom:24px}
+
+/* PROGRESS DOTS */
+.pdots{display:flex;gap:6px;justify-content:center;margin-bottom:32px}
+.pdot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all var(--tr)}
+.pdot.done{background:var(--border2)}
+.pdot.active{background:var(--red);width:24px;border-radius:4px}
+
+/* ═══════════════════════════
+   THANK YOU
+═══════════════════════════ */
+#ty{display:none}
+#ty.active{display:block;animation:fu .4s ease both}
+.ty-wrap{text-align:center;padding:60px 0 48px}
+.ty-ico{width:72px;height:72px;background:var(--gs);border:2px solid #c3e6cb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;font-size:32px}
+.ty-title{font-family:'Unbounded',sans-serif;font-size:clamp(22px,4vw,36px);font-weight:700;margin-bottom:14px;line-height:1.2}
+.ty-desc{color:var(--t2);font-size:15px;line-height:1.8;max-width:480px;margin:0 auto 48px}
+.ty-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:24px}
+.ty-head{padding:16px 24px;background:var(--card2);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t2)}
+.ty-row{display:flex;padding:14px 24px;border-bottom:1px solid var(--border);gap:16px}
+.ty-row:last-child{border-bottom:none}
+.ty-lbl{font-size:12px;font-weight:600;color:var(--t2);min-width:150px;padding-top:2px;flex-shrink:0}
+.ty-val{font-size:14px;color:var(--text);line-height:1.6}
+.tag{display:inline-block;background:var(--card2);border:1px solid var(--border);border-radius:100px;padding:2px 10px;font-size:12px;margin:2px 3px 2px 0;color:var(--t2)}
+.ty-note{background:var(--gs);border:1px solid #c3e6cb;border-radius:12px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start}
+.ty-note-i{font-size:20px;flex-shrink:0;margin-top:2px}
+.ty-note-t{font-size:14px;color:var(--green);line-height:1.7}
+.ty-note-t strong{font-weight:700}
+
+/* FLASH */
+#flash{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:12px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+#flash.err{background:var(--red)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="ti">
+    <div class="brand">Бриф<em>.</em></div>
+    <div class="sbadge">Шаг <b id="snum">1</b> из <b>11</b></div>
+  </div>
+  <div class="pbar"><div class="pfill" id="pfill" style="width:9%"></div></div>
+</div>
+
+<main>
+
+<!-- dots -->
+<div class="pdots" id="pdots">
+  <div class="pdot active"></div>
+  <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+  <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+  <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+  <div class="pdot"></div>
+</div>
+
+<!-- ═══════ ШАГ 1: О компании ═══════ -->
+<div class="step active" id="s1">
+  <div class="eyebrow">Шаг 1 — Информация о компании</div>
+  <h1 class="st">Расскажите о себе</h1>
+  <p class="sd">Базовая информация о проекте. Чем точнее вы ответите — тем точнее мы поймём задачу и сделаем именно то, что нужно вашему бизнесу.</p>
+
+  <div class="hint"><div class="hint-icon">💡</div><div>Пишите развёрнуто — каждая деталь помогает нам лучше понять ваш бизнес и создать сайт который реально работает, а не просто «красиво выглядит».</div></div>
+
+  <div class="two-col">
+    <div class="field">
+      <label class="fl">Название компании / бренда / проекта <sup>*</sup></label>
+      <input type="text" id="f-name" placeholder="Например: студия «Пробел», ИП Фролов А.В.">
+    </div>
+    <div class="field">
+      <label class="fl">Ваше имя <sup>*</sup></label>
+      <input type="text" id="f-cname" placeholder="Как к вам обращаться">
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="field">
+      <label class="fl">Адрес текущего сайта <small>если есть</small></label>
+      <input type="text" id="f-cursite" placeholder="https://...">
+    </div>
+    <div class="field">
+      <label class="fl">Планируемый домен <small>если есть</small></label>
+      <input type="text" id="f-newdomain" placeholder="Например: mycompany.ru">
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Чем занимается компания? <sup>*</sup></label>
+    <textarea id="f-what" placeholder="Опишите подробно — что делаете, какие продукты или услуги предлагаете, в каком городе или регионе работаете, как давно на рынке. Например: производим и устанавливаем пластиковые окна в Ставрополе. На рынке с 2010 года. Работаем с физическими лицами и застройщиками."></textarea>
+    <div class="char-hint">Чем подробнее — тем лучше. Минимум 3–4 предложения.</div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Ваше главное отличие от конкурентов</label>
+    <textarea id="f-diff" placeholder="Что вы делаете иначе? Почему клиент должен выбрать вас, а не соседей? Конкретно, без «индивидуального подхода» и «высокого качества» — это говорят все. Например: единственные в городе кто работает с нестандартными проёмами и делает замер за 2 часа." style="min-height:80px"></textarea>
+  </div>
+
+  <div class="field">
+    <label class="fl">Информация о продуктах или услугах</label>
+    <textarea id="f-products" placeholder="Перечислите основные категории товаров или услуг которые должны быть представлены на сайте. Укажите примерное количество позиций если это каталог." style="min-height:80px"></textarea>
+  </div>
+
+  <div class="navrow">
+    <div></div>
+    <button class="btn bnx" onclick="go(1,2)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 2: Аудитория и цели ═══════ -->
+<div class="step" id="s2">
+  <div class="eyebrow">Шаг 2 — Аудитория и цели</div>
+  <h1 class="st">Для кого сайт и что он должен сделать?</h1>
+  <p class="sd">Это самый важный шаг. Сайт без чёткой цели и понимания аудитории — красивая картинка без результата.</p>
+
+  <div class="hint"><div class="hint-icon">🎯</div><div>Опишите одного конкретного клиента — не «все кому нужно», а реальный человек с именем, возрастом и ситуацией. Это определяет всё: текст, дизайн, структуру, кнопки.</div></div>
+
+  <div class="field">
+    <label class="fl">Портрет вашего идеального клиента <sup>*</sup></label>
+    <textarea id="f-aud" placeholder="Например: Антон, 42 года, владеет небольшим кафе. Хочет сделать нормальный сайт, уже пробовал с фрилансером — остался недоволен результатом. Ценит своё время, смотрит сайты с телефона. Готов заплатить нормальные деньги если видит что исполнитель понимает задачу."></textarea>
+    <div class="char-hint">Важно: имя, возраст, ситуация, что его беспокоит, как принимает решения.</div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Целевая группа воздействия</label>
+    <textarea id="f-targetgroup" placeholder="Например: владельцы малого бизнеса, директора по маркетингу, молодые мамы в декрете — кто именно будет заходить на сайт и принимать решение." style="min-height:72px"></textarea>
+  </div>
+
+  <div class="field">
+    <label class="fl">Главная боль или страх вашего клиента</label>
+    <textarea id="f-pain" placeholder="Чего он боится больше всего? Что мешает ему купить / заказать прямо сейчас? Например: боится переплатить, боится что сделают долго и некачественно, не знает как проверить исполнителя." style="min-height:72px"></textarea>
+  </div>
+
+  <div class="sdiv">Цель сайта — выберите одну главную</div>
+
+  <div class="cgrid c2">
+    <div class="card" data-k="goal" data-v="lead" onclick="p1(this)"><span class="ce">📋</span><div class="ct">Получить заявку</div><div class="cs">Форма, звонок, запрос расчёта</div></div>
+    <div class="card" data-k="goal" data-v="call" onclick="p1(this)"><span class="ce">📞</span><div class="ct">Позвонить / написать</div><div class="cs">Телефон, мессенджер, прямой контакт</div></div>
+    <div class="card" data-k="goal" data-v="buy" onclick="p1(this)"><span class="ce">💳</span><div class="ct">Купить онлайн</div><div class="cs">Оплата прямо на сайте</div></div>
+    <div class="card" data-k="goal" data-v="subscribe" onclick="p1(this)"><span class="ce">📩</span><div class="ct">Подписаться</div><div class="cs">Email, Telegram-канал, рассылка</div></div>
+    <div class="card" data-k="goal" data-v="trust" onclick="p1(this)"><span class="ce">🤝</span><div class="ct">Сформировать доверие</div><div class="cs">Убедить, запомниться, вернуться позже</div></div>
+    <div class="card" data-k="goal" data-v="view" onclick="p1(this)"><span class="ce">👁</span><div class="ct">Показать портфолио</div><div class="cs">Оценить уровень и написать</div></div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Какой результат вы хотите получить от сайта? <sup>*</sup></label>
+    <textarea id="f-kpi" placeholder="Например: хочу получать 15–20 заявок в месяц, снизить нагрузку на менеджеров — пусть клиенты сами находят ответы на сайте, или: хочу чтобы партнёры видели что мы серьёзная компания перед переговорами."></textarea>
+    <div class="char-hint">KPI и конкретный измеримый результат — это поможет нам правильно расставить приоритеты.</div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Где клиент чаще смотрит сайты?</label>
+  </div>
+  <div class="cgrid c3" style="margin-bottom:28px">
+    <div class="card" data-k="device" data-v="desktop" onclick="p1(this)"><span class="ce">💻</span><div class="ct">С компьютера</div></div>
+    <div class="card" data-k="device" data-v="mobile" onclick="p1(this)"><span class="ce">📱</span><div class="ct">С телефона</div></div>
+    <div class="card" data-k="device" data-v="both" onclick="p1(this)"><span class="ce">🔄</span><div class="ct">Везде</div></div>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(2,1)">← Назад</button>
+    <button class="btn bnx" onclick="go(2,3)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 3: Конкуренты ═══════ -->
+<div class="step" id="s3">
+  <div class="eyebrow">Шаг 3 — Конкуренты и рынок</div>
+  <h1 class="st">Кто ещё работает в вашей нише?</h1>
+  <p class="sd">Анализ конкурентов помогает нам сделать сайт который выгодно выделяется на фоне других — а не повторяет то, что уже есть.</p>
+
+  <div class="hint"><div class="hint-icon">🔍</div><div>Укажите 2–5 конкурентов со ссылками и обязательно напишите: что вам <b>нравится</b> и что <b>не нравится</b> на каждом из них. Это ценнейшая информация для дизайнера.</div></div>
+
+  <div class="sdiv">Конкуренты — сайты в вашей нише</div>
+  <div class="ref-table" id="comp-table"></div>
+  <button class="add-ref" onclick="addRef('comp-table','comp')">+ Добавить конкурента</button>
+
+  <div class="sdiv">Партнёры / компании которые вам симпатичны</div>
+  <div class="ref-table" id="partner-table"></div>
+  <button class="add-ref" onclick="addRef('partner-table','partner')">+ Добавить партнёра или смежную компанию</button>
+
+  <div class="field">
+    <label class="fl">Чем ваш сайт должен выгодно отличаться от конкурентов?</label>
+    <textarea id="f-vs" placeholder="Например: у всех конкурентов устаревший дизайн и непонятная структура. Хочу чтобы наш сайт выглядел современно и человек за 10 секунд понимал что мы делаем и почему нам стоит доверять." style="min-height:80px"></textarea>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(3,2)">← Назад</button>
+    <button class="btn bnx" onclick="go(3,4)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 4: Референсы ═══════ -->
+<div class="step" id="s4">
+  <div class="eyebrow">Шаг 4 — Визуальные референсы</div>
+  <h1 class="st">Сайты которые вам нравятся</h1>
+  <p class="sd">Не обязательно из вашей ниши — важно что именно вам визуально нравится. Это помогает нам быстро понять ваш вкус и направление.</p>
+
+  <div class="hint"><div class="hint-icon">✨</div><div>Укажите ссылку и обязательно напишите <b>что именно</b> нравится — цвет, типографика, компоновка, ощущение, скорость загрузки. «Просто нравится» — не помогает. «Нравится как они используют большие фото и минимум текста» — отлично.</div></div>
+
+  <div class="ref-table" id="ref-table"></div>
+  <button class="add-ref" onclick="addRef('ref-table','ref')">+ Добавить референс</button>
+
+  <div class="sdiv">Загрузите скриншоты понравившихся сайтов или деталей</div>
+  <div class="upload-zone" id="uz1" ondragover="drag(event,true,'uz1')" ondragleave="drag(event,false,'uz1')" ondrop="drop(event,'uz1','prev1')">
+    <input type="file" accept="image/*" multiple onchange="files(this,'prev1')">
+    <div class="uz-icon">🖼</div>
+    <div class="uz-title">Нажмите или перетащите скриншоты сюда</div>
+    <div class="uz-sub">PNG, JPG, WEBP — до 10 файлов. Можно скрины с телефона.</div>
+  </div>
+  <div class="previews" id="prev1"></div>
+
+  <div class="field">
+    <label class="fl">Комментарий к загруженным скриншотам</label>
+    <textarea id="f-screennote" placeholder="Опишите что именно вам нравится на этих скриншотах — цвет, расположение блоков, шрифт, кнопки, ощущение. Например: нравится как сделан первый экран — большой заголовок и фото на весь экран, без лишних элементов." style="min-height:72px"></textarea>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(4,3)">← Назад</button>
+    <button class="btn bnx" onclick="go(4,5)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 5: Фирменный стиль ═══════ -->
+<div class="step" id="s5">
+  <div class="eyebrow">Шаг 5 — Фирменный стиль и брендинг</div>
+  <h1 class="st">Есть ли у вас фирменный стиль?</h1>
+  <p class="sd">Логотип, цвета, шрифты — всё это определяет то как будет выглядеть сайт. Если фирменного стиля нет — мы разработаем его в рамках проекта.</p>
+
+  <div class="sdiv">Что из этого у вас уже есть?</div>
+  <div class="asset-grid">
+    <div class="asset-card" data-v="logo" onclick="toggleAsset(this)">
+      <div class="asset-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="asset-info"><div class="at">🎨 Логотип</div><div class="as">Есть готовый логотип</div></div>
+    </div>
+    <div class="asset-card" data-v="guideline" onclick="toggleAsset(this)">
+      <div class="asset-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="asset-info"><div class="at">📖 Брендбук / гайдлайн</div><div class="as">Фирменный стиль задокументирован</div></div>
+    </div>
+    <div class="asset-card" data-v="colors" onclick="toggleAsset(this)">
+      <div class="asset-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="asset-info"><div class="at">🎨 Фирменные цвета</div><div class="as">Знаю точные коды цветов</div></div>
+    </div>
+    <div class="asset-card" data-v="fonts" onclick="toggleAsset(this)">
+      <div class="asset-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="asset-info"><div class="at">🔤 Фирменные шрифты</div><div class="as">Есть конкретные шрифты бренда</div></div>
+    </div>
+    <div class="asset-card" data-v="photos" onclick="toggleAsset(this)">
+      <div class="asset-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="asset-info"><div class="at">📷 Фотографии</div><div class="as">Есть фото команды, офиса, продуктов</div></div>
+    </div>
+    <div class="asset-card" data-v="none" onclick="toggleAsset(this)">
+      <div class="asset-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="asset-info"><div class="at">🆕 Ничего нет</div><div class="as">Начинаем с нуля</div></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Фирменные цвета — укажите коды или описание</label>
+    <input type="text" id="f-brandcolors" placeholder="Например: основной #1C3A2A, акцент #FF6B35, фон #F5F2EE. Или: тёмно-зелёный, оранжевый, бежевый.">
+  </div>
+
+  <div class="sdiv">Загрузите логотип и материалы фирменного стиля</div>
+  <div class="upload-zone" id="uz2" ondragover="drag(event,true,'uz2')" ondragleave="drag(event,false,'uz2')" ondrop="drop(event,'uz2','prev2')">
+    <input type="file" accept="image/*,.pdf,.ai,.eps,.svg,.fig" multiple onchange="files(this,'prev2')">
+    <div class="uz-icon">📎</div>
+    <div class="uz-title">Логотип, брендбук, фирменные материалы</div>
+    <div class="uz-sub">PNG, JPG, SVG, PDF, AI, EPS, FIG — любые форматы</div>
+  </div>
+  <div class="previews" id="prev2"></div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(5,4)">← Назад</button>
+    <button class="btn bnx" onclick="go(5,6)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 6: Настроение и характер ═══════ -->
+<div class="step" id="s6">
+  <div class="eyebrow">Шаг 6 — Характер и настроение</div>
+  <h1 class="st">Каким должен ощущаться сайт?</h1>
+  <p class="sd">Ощущение от сайта так же важно как структура. Выберите слова которые точно описывают характер вашего бренда.</p>
+
+  <p class="mhint">Выберите 2–4 слова которые вам близки</p>
+  <div class="mtags" id="moods">
+    <div class="mtag" data-v="строгий" onclick="md(this)">Строгий</div>
+    <div class="mtag" data-v="минималистичный" onclick="md(this)">Минималистичный</div>
+    <div class="mtag" data-v="тёплый" onclick="md(this)">Тёплый</div>
+    <div class="mtag" data-v="дерзкий" onclick="md(this)">Дерзкий</div>
+    <div class="mtag" data-v="роскошный" onclick="md(this)">Роскошный</div>
+    <div class="mtag" data-v="провокационный" onclick="md(this)">Провокационный</div>
+    <div class="mtag" data-v="человечный" onclick="md(this)">Человечный</div>
+    <div class="mtag" data-v="технологичный" onclick="md(this)">Технологичный</div>
+    <div class="mtag" data-v="игривый" onclick="md(this)">Игривый</div>
+    <div class="mtag" data-v="энергичный" onclick="md(this)">Энергичный</div>
+    <div class="mtag" data-v="уверенный" onclick="md(this)">Уверенный</div>
+    <div class="mtag" data-v="уютный" onclick="md(this)">Уютный</div>
+    <div class="mtag" data-v="холодный" onclick="md(this)">Холодный</div>
+    <div class="mtag" data-v="авторский" onclick="md(this)">Авторский</div>
+    <div class="mtag" data-v="медленный и торжественный" onclick="md(this)">Медленный</div>
+    <div class="mtag" data-v="экспериментальный" onclick="md(this)">Экспериментальный</div>
+    <div class="mtag" data-v="японский минимализм" onclick="md(this)">Японский</div>
+    <div class="mtag" data-v="скандинавский стиль" onclick="md(this)">Скандинавский</div>
+    <div class="mtag" data-v="редакционный как журнал" onclick="md(this)">Редакционный</div>
+    <div class="mtag" data-v="брутальный" onclick="md(this)">Брутальный</div>
+    <div class="mtag" data-v="классический" onclick="md(this)">Классический</div>
+    <div class="mtag" data-v="консервативный" onclick="md(this)">Консервативный</div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Если бы ваш бренд был человеком — кем бы он был?</label>
+    <textarea id="f-persona" placeholder="Например: 40-летний архитектор. Говорит мало, но точно. Читает много. Не ведёт Instagram. Одевается в серое. Когда говорит — все слушают. Или: молодая энергичная девушка 25 лет, дизайнер, постоянно в движении, яркая, открытая." style="min-height:80px"></textarea>
+    <div class="char-hint">Это помогает нам точно передать характер через дизайн и тексты.</div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Tone of voice — как вы разговариваете с клиентами?</label>
+    <textarea id="f-tov" placeholder="Например: официально и профессионально, без жаргона. Или: дружески, как с приятелем, с юмором. Или: экспертно и немного по-научному. Приведите пример фразы которую мог бы сказать ваш бренд." style="min-height:72px"></textarea>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(6,5)">← Назад</button>
+    <button class="btn bnx" onclick="go(6,7)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 7: Визуальный стиль ═══════ -->
+<div class="step" id="s7">
+  <div class="eyebrow">Шаг 7 — Визуальный стиль</div>
+  <h1 class="st">Как должен выглядеть сайт?</h1>
+  <p class="sd">Цветовая схема, плотность дизайна и стилистика.</p>
+
+  <div class="field"><label class="fl">Цветовая схема</label></div>
+  <div class="cchips" id="colorchips">
+    <div class="cchip" data-v="Чёрно-белый монохром — только чёрный и белый" onclick="pc(this)"><div class="cdot" style="background:linear-gradient(135deg,#111 50%,#fff 50%)"></div>Чёрно-белый</div>
+    <div class="cchip" data-v="Тёмный фон с ярким акцентным цветом" onclick="pc(this)"><div class="cdot" style="background:linear-gradient(135deg,#111 55%,#c8f55a 55%)"></div>Тёмный + акцент</div>
+    <div class="cchip" data-v="Светлый белый фон с тёмным текстом" onclick="pc(this)"><div class="cdot" style="background:#f8f8f6;border:1px solid #ddd"></div>Светлый</div>
+    <div class="cchip" data-v="Тёплые земляные тона — бежевый, терракот, коричневый" onclick="pc(this)"><div class="cdot" style="background:linear-gradient(135deg,#e8d5b0 50%,#c4391a 50%)"></div>Земляные</div>
+    <div class="cchip" data-v="Глубокий тёмно-зелёный или синий как основной цвет" onclick="pc(this)"><div class="cdot" style="background:linear-gradient(135deg,#1a3a2a 50%,#f0f0f0 50%)"></div>Глубокий</div>
+    <div class="cchip" data-v="Пастельный мягкий — светлые оттенки без резких контрастов" onclick="pc(this)"><div class="cdot" style="background:linear-gradient(135deg,#f9e4e4 50%,#d4e8f0 50%)"></div>Пастельный</div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Цвета которых точно не должно быть</label>
+    <input type="text" id="f-nocolors" placeholder="Например: не хочу синий и фиолетовый, никакого оранжевого, избегать кислотных оттенков">
+  </div>
+
+  <div class="field"><label class="fl">Насколько насыщенным должен быть дизайн?</label></div>
+  <div class="sbox">
+    <div class="slabs"><span>Воздушный — минимум, пространство</span><span>Насыщенный — много деталей</span></div>
+    <div class="srow" id="density">
+      <div class="sdot" data-v="1" onclick="ps('density',this)">1</div>
+      <div class="sdot" data-v="2" onclick="ps('density',this)">2</div>
+      <div class="sdot" data-v="3" onclick="ps('density',this)">3</div>
+      <div class="sdot" data-v="4" onclick="ps('density',this)">4</div>
+      <div class="sdot" data-v="5" onclick="ps('density',this)">5</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Стилистика сайта — выберите</label>
+  </div>
+  <div class="cgrid c2" style="margin-bottom:28px">
+    <div class="card" data-k="styletype" data-v="Уникальный авторский дизайн" onclick="p1(this)"><div class="ct">✨ Уникальный авторский</div><div class="cs">Разрабатываем с нуля под ваш бренд</div></div>
+    <div class="card" data-k="styletype" data-v="Современный чистый дизайн на основе лучших практик" onclick="p1(this)"><div class="ct">🧩 Современный / чистый</div><div class="cs">Проверенные паттерны, надёжно</div></div>
+    <div class="card" data-k="styletype" data-v="Консервативный классический дизайн" onclick="p1(this)"><div class="ct">🏛 Консервативный</div><div class="cs">Строго, официально, традиционно</div></div>
+    <div class="card" data-k="styletype" data-v="Динамичный яркий дизайн с акцентами" onclick="p1(this)"><div class="ct">⚡ Динамичный / яркий</div><div class="cs">Энергия, движение, контрасты</div></div>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(7,6)">← Назад</button>
+    <button class="btn bnx" onclick="go(7,8)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 8: Структура сайта ═══════ -->
+<div class="step" id="s8">
+  <div class="eyebrow">Шаг 8 — Структура и разделы</div>
+  <h1 class="st">Что должно быть на сайте?</h1>
+  <p class="sd">Включите нужные разделы. Это «оглавление» вашего сайта — продумайте его внимательно, как советует любой профессиональный бриф.</p>
+
+  <div class="tlist" id="blocks">
+    <div class="trow on" data-v="Навигация с логотипом и меню" onclick="tog(this)"><div class="tleft"><span class="ticon">🧭</span><div><div class="ttxt">Навигация / шапка</div><div class="tsub">Логотип, меню, кнопка действия</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow on" data-v="Hero — первый экран с главным заголовком и призывом к действию" onclick="tog(this)"><div class="tleft"><span class="ticon">⚡</span><div><div class="ttxt">Первый экран</div><div class="tsub">Главный заголовок, кнопка, ощущение бренда</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="О компании / О нас — кто мы, подход, ценности, позиция" onclick="tog(this)"><div class="tleft"><span class="ticon">👋</span><div><div class="ttxt">О компании / О нас</div><div class="tsub">Кто мы, подход, история, ценности</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Услуги или продукты — подробный перечень с описаниями и ценами" onclick="tog(this)"><div class="tleft"><span class="ticon">📋</span><div><div class="ttxt">Услуги / Продукты</div><div class="tsub">Перечень с описаниями и ценами</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Каталог товаров с фильтрацией и карточками" onclick="tog(this)"><div class="tleft"><span class="ticon">🗂</span><div><div class="ttxt">Каталог товаров</div><div class="tsub">С фильтрами, карточками, ценами</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Кейсы и портфолио — примеры работ с описанием задачи и результата" onclick="tog(this)"><div class="tleft"><span class="ticon">🖼</span><div><div class="ttxt">Кейсы / Портфолио</div><div class="tsub">Примеры работ с результатами</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Преимущества — конкретные аргументы с доказательствами почему выбирают нас" onclick="tog(this)"><div class="tleft"><span class="ticon">✅</span><div><div class="ttxt">Преимущества / Почему мы</div><div class="tsub">Конкретные аргументы с доказательствами</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Процесс работы — этапы сотрудничества пошагово" onclick="tog(this)"><div class="tleft"><span class="ticon">🔄</span><div><div class="ttxt">Процесс работы</div><div class="tsub">Этапы, как всё устроено</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Отзывы клиентов — реальные слова, не шаблонные звёздочки" onclick="tog(this)"><div class="tleft"><span class="ticon">💬</span><div><div class="ttxt">Отзывы клиентов</div><div class="tsub">Реальные слова, не звёздочки</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Цены и тарифные планы" onclick="tog(this)"><div class="tleft"><span class="ticon">💰</span><div><div class="ttxt">Цены / Тарифы</div><div class="tsub">Стоимость, пакеты, тарифы</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Команда — имена, роли и живые детали о людях" onclick="tog(this)"><div class="tleft"><span class="ticon">👥</span><div><div class="ttxt">Команда</div><div class="tsub">Имена, роли, живые детали</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Блог / Новости / Статьи" onclick="tog(this)"><div class="tleft"><span class="ticon">📰</span><div><div class="ttxt">Блог / Новости</div><div class="tsub">Статьи, новости компании</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="Документы и сертификаты" onclick="tog(this)"><div class="tleft"><span class="ticon">📄</span><div><div class="ttxt">Документы / Сертификаты</div><div class="tsub">Лицензии, дипломы, документация</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow" data-v="FAQ — ответы на частые вопросы клиентов" onclick="tog(this)"><div class="tleft"><span class="ticon">❓</span><div><div class="ttxt">Вопросы и ответы (FAQ)</div><div class="tsub">Снимает возражения и сомнения</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow on" data-v="Форма заявки или обратной связи — имя, телефон, сообщение" onclick="tog(this)"><div class="tleft"><span class="ticon">📬</span><div><div class="ttxt">Форма заявки</div><div class="tsub">Имя, телефон, сообщение</div></div></div><div class="sw"><div class="knob"></div></div></div>
+    <div class="trow on" data-v="Футер — контакты, соцсети, юридическая информация, копирайт" onclick="tog(this)"><div class="tleft"><span class="ticon">🔽</span><div><div class="ttxt">Подвал (футер)</div><div class="tsub">Контакты, соцсети, юр. информация</div></div></div><div class="sw"><div class="knob"></div></div></div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Опишите желаемую структуру своими словами</label>
+    <textarea id="f-structure" placeholder="Перечислите разделы и подразделы как вы их видите. Например: 1. Главная, 2. О нас, 3. Услуги (с подразделами: дизайн, разработка, продвижение), 4. Портфолио, 5. Блог, 6. Контакты. Или просто опишите что должно быть на одной странице." style="min-height:80px"></textarea>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(8,7)">← Назад</button>
+    <button class="btn bnx" onclick="go(8,9)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 9: Функции ═══════ -->
+<div class="step" id="s9">
+  <div class="eyebrow">Шаг 9 — Функциональность</div>
+  <h1 class="st">Что должно работать на сайте?</h1>
+  <p class="sd">Выберите все функции которые нужны. Это поможет нам правильно оценить объём и технические требования.</p>
+
+  <p class="mhint">Выберите все подходящие варианты</p>
+  <div class="cgrid c2">
+    <div class="card multi" data-k="features" data-v="Форма заявки с отправкой на email" onclick="pm(this)"><span class="ce">📧</span><div class="ct">Заявки на почту</div><div class="cs">Данные формы приходят вам на email</div></div>
+    <div class="card multi" data-k="features" data-v="Уведомления о заявках в Telegram-бот" onclick="pm(this)"><span class="ce">✈️</span><div class="ct">Заявки в Telegram</div><div class="cs">Мгновенные уведомления в мессенджер</div></div>
+    <div class="card multi" data-k="features" data-v="Плавающая кнопка Telegram для быстрой связи" onclick="pm(this)"><span class="ce">💬</span><div class="ct">Кнопка Telegram</div><div class="cs">Всегда видна, открывает диалог</div></div>
+    <div class="card multi" data-k="features" data-v="Онлайн-оплата — ЮKassa, Stripe или Robokassa" onclick="pm(this)"><span class="ce">💳</span><div class="ct">Онлайн-оплата</div><div class="cs">Приём платежей прямо на сайте</div></div>
+    <div class="card multi" data-k="features" data-v="Каталог товаров с корзиной и оформлением заказа" onclick="pm(this)"><span class="ce">🛒</span><div class="ct">Корзина / Интернет-магазин</div><div class="cs">Заказы, корзина, оформление</div></div>
+    <div class="card multi" data-k="features" data-v="Личный кабинет для клиентов" onclick="pm(this)"><span class="ce">👤</span><div class="ct">Личный кабинет</div><div class="cs">Регистрация, история заказов</div></div>
+    <div class="card multi" data-k="features" data-v="Онлайн-запись или бронирование" onclick="pm(this)"><span class="ce">📅</span><div class="ct">Онлайн-запись</div><div class="cs">Запись на услугу, бронирование времени</div></div>
+    <div class="card multi" data-k="features" data-v="Интеграция с CRM-системой" onclick="pm(this)"><span class="ce">🔗</span><div class="ct">CRM-интеграция</div><div class="cs">AmoCRM, Битрикс24, другие</div></div>
+    <div class="card multi" data-k="features" data-v="Блог или новостная лента с редактором" onclick="pm(this)"><span class="ce">✏️</span><div class="ct">Система управления контентом</div><div class="cs">Самостоятельное редактирование текстов</div></div>
+    <div class="card multi" data-k="features" data-v="Калькулятор расчёта стоимости" onclick="pm(this)"><span class="ce">🔢</span><div class="ct">Калькулятор</div><div class="cs">Расчёт цены, конфигуратор</div></div>
+    <div class="card multi" data-k="features" data-v="Чат или виджет поддержки" onclick="pm(this)"><span class="ce">💭</span><div class="ct">Онлайн-чат</div><div class="cs">Jivosite, Carrot Quest или другой</div></div>
+    <div class="card multi" data-k="features" data-v="Мультиязычность — версии на нескольких языках" onclick="pm(this)"><span class="ce">🌍</span><div class="ct">Мультиязычность</div><div class="cs">Несколько языковых версий</div></div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Кто будет обновлять и поддерживать сайт после запуска?</label>
+  </div>
+  <div class="cgrid c3" style="margin-bottom:28px">
+    <div class="card" data-k="support" data-v="Вы сами — нужна простая CMS" onclick="p1(this)"><div class="ct">Мы сами</div><div class="cs">Нужен удобный редактор</div></div>
+    <div class="card" data-k="support" data-v="Подрядчик — передадим на поддержку" onclick="p1(this)"><div class="ct">Подрядчик</div><div class="cs">Отдадим на поддержку</div></div>
+    <div class="card" data-k="support" data-v="Не определились" onclick="p1(this)"><div class="ct">Не определились</div><div class="cs">Обсудим позже</div></div>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(9,8)">← Назад</button>
+    <button class="btn bnx" onclick="go(9,10)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 10: Продвижение, бюджет, сроки ═══════ -->
+<div class="step" id="s10">
+  <div class="eyebrow">Шаг 10 — Бюджет и сроки</div>
+  <h1 class="st">Практические детали</h1>
+  <p class="sd">Честные ответы помогают нам предложить оптимальное решение — не переплатить и не получить меньше чем нужно.</p>
+
+  <div class="field"><label class="fl">Планируемый бюджет на разработку</label></div>
+  <div class="cgrid c2" style="margin-bottom:28px">
+    <div class="card" data-k="budget" data-v="До 50 000 руб." onclick="p1(this)"><div class="ct">До 50 000 ₽</div></div>
+    <div class="card" data-k="budget" data-v="50 000 — 150 000 руб." onclick="p1(this)"><div class="ct">50 000 — 150 000 ₽</div></div>
+    <div class="card" data-k="budget" data-v="150 000 — 500 000 руб." onclick="p1(this)"><div class="ct">150 000 — 500 000 ₽</div></div>
+    <div class="card" data-k="budget" data-v="Более 500 000 руб." onclick="p1(this)"><div class="ct">Более 500 000 ₽</div></div>
+    <div class="card" data-k="budget" data-v="Бюджет не определён — жду предложение" onclick="p1(this)"><div class="ct">Не определён</div><div class="cs">Жду ваше предложение</div></div>
+  </div>
+
+  <div class="field"><label class="fl">Желаемый срок запуска сайта</label></div>
+  <div class="cgrid c2" style="margin-bottom:28px">
+    <div class="card" data-k="timeline" data-v="Срочно — нужно за 2 недели" onclick="p1(this)"><div class="ct">⚡ Срочно</div><div class="cs">Нужно за 1–2 недели</div></div>
+    <div class="card" data-k="timeline" data-v="1 месяц" onclick="p1(this)"><div class="ct">📅 1 месяц</div></div>
+    <div class="card" data-k="timeline" data-v="2–3 месяца" onclick="p1(this)"><div class="ct">🗓 2–3 месяца</div></div>
+    <div class="card" data-k="timeline" data-v="Сроки гибкие — важно качество" onclick="p1(this)"><div class="ct">🎯 Сроки гибкие</div><div class="cs">Важнее качество</div></div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Планируется ли продвижение в поисковых системах (SEO)?</label>
+  </div>
+  <div class="cgrid c3" style="margin-bottom:28px">
+    <div class="card" data-k="seo" data-v="Да, SEO важно — учитывайте при разработке" onclick="p1(this)"><div class="ct">Да, важно</div><div class="cs">Закладывайте в разработку</div></div>
+    <div class="card" data-k="seo" data-v="Планируется позже" onclick="p1(this)"><div class="ct">Позже</div></div>
+    <div class="card" data-k="seo" data-v="SEO не планируется" onclick="p1(this)"><div class="ct">Не планируется</div></div>
+  </div>
+
+  <div class="field">
+    <label class="fl">Планируется ли контекстная или таргетированная реклама?</label>
+  </div>
+  <div class="cgrid c3" style="margin-bottom:28px">
+    <div class="card" data-k="ads" data-v="Да — Яндекс Директ или Google Ads" onclick="p1(this)"><div class="ct">Да, Директ / Google</div></div>
+    <div class="card" data-k="ads" data-v="Да — таргет в ВКонтакте или других соцсетях" onclick="p1(this)"><div class="ct">Да, таргет</div></div>
+    <div class="card" data-k="ads" data-v="Реклама не планируется" onclick="p1(this)"><div class="ct">Не планируется</div></div>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(10,9)">← Назад</button>
+    <button class="btn bnx" onclick="go(10,11)">Продолжить →</button>
+  </div>
+</div>
+
+<!-- ═══════ ШАГ 11: Финальные детали ═══════ -->
+<div class="step" id="s11">
+  <div class="eyebrow">Шаг 11 — Финальные детали</div>
+  <h1 class="st">Последние штрихи</h1>
+  <p class="sd">Запреты, пожелания и контакт для связи.</p>
+
+  <div class="hint"><div class="hint-icon">🚫</div><div>Запреты работают не слабее, чем пожелания. Чётко скажите чего не должно быть — и мы это учтём.</div></div>
+
+  <div class="field">
+    <label class="fl">Чего точно не должно быть на сайте?</label>
+    <textarea id="f-no" placeholder="Например: не хочу фиолетовые и синие цвета, не хочу стоковые фотографии с людьми в офисе, избегать слова «инновационный» и «уникальный», не хочу агрессивных всплывающих окон, не хочу анимации которые отвлекают от содержания." style="min-height:80px"></textarea>
+  </div>
+
+  <div class="field">
+    <label class="fl">Есть ли особые технические требования?</label>
+    <textarea id="f-tech" placeholder="Например: нужна интеграция с 1С, обязательно WordPress, нужен мультиязычный сайт, есть корпоративные стандарты безопасности." style="min-height:72px"></textarea>
+  </div>
+
+  <div class="field">
+    <label class="fl">Дополнительные пожелания и вопросы</label>
+    <textarea id="f-extra" placeholder="Всё что не вошло в предыдущие шаги. Любые детали, примеры, пожелания — всё важно." style="min-height:72px"></textarea>
+  </div>
+
+  <div class="two-col">
+    <div class="field">
+      <label class="fl">Ваш контакт — Telegram или email <sup>*</sup></label>
+      <input type="text" id="f-contact" placeholder="@username или name@mail.ru">
+    </div>
+    <div class="field">
+      <label class="fl">Телефон <small>по желанию</small></label>
+      <input type="text" id="f-phone" placeholder="+7 (___) ___-__-__">
+    </div>
+  </div>
+
+  <div class="navrow">
+    <button class="btn bbk" onclick="go(11,10)">← Назад</button>
+    <button class="btn bsb" onclick="submit()">Отправить бриф →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     THANK YOU
+═══════════════════════════ -->
+<div id="ty">
+  <div class="ty-wrap">
+    <div class="ty-ico">✓</div>
+    <h1 class="ty-title">Бриф получен!</h1>
+    <p class="ty-desc">Мы изучим ваши ответы и свяжемся с вами в течение 24 часов. Уже понимаем как подойти к вашему проекту.</p>
+  </div>
+  <div class="ty-card">
+    <div class="ty-head">Краткое резюме вашего брифа</div>
+    <div id="ty-rows"></div>
+  </div>
+  <div class="ty-note">
+    <div class="ty-note-i">💬</div>
+    <div class="ty-note-t"><strong>Что дальше?</strong> Мы свяжемся с вами по указанному контакту, уточним детали и предложим концепцию и смету. Если появятся вопросы — пишите напрямую.</div>
+  </div>
+</div>
+
+</main>
+<div id="flash"></div>
+
+<script>
+// ══════════════════════════════════════
+// CONFIG — вставьте свои данные
+// ══════════════════════════════════════
+const FORMSPREE_URL = 'https://formspree.io/f/xojrgyrg'; // vitaly.gavrilov75@gmail.com
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+const S = {
+  siteType:'',device:'',goal:'',colorScheme:'',density:'',styletype:'',
+  budget:'',timeline:'',seo:'',ads:'',support:'',
+  moods:[],blocks:[],features:[],assets:[],
+  refs:[],comps:[],partners:[],
+  uploadedScreens:[],uploadedBrand:[],
+};
+
+// init active blocks
+document.querySelectorAll('.trow.on').forEach(r=>{ if(!S.blocks.includes(r.dataset.v)) S.blocks.push(r.dataset.v); });
+
+const TOTAL = 11;
+let cur = 1;
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function go(from, to) {
+  if (to > from && !valid(from)) return;
+  col(from);
+  cur = to;
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s'+to).classList.add('active');
+  document.getElementById('snum').textContent = to;
+  document.getElementById('pfill').style.width = Math.round(to/TOTAL*100)+'%';
+  // dots
+  document.querySelectorAll('.pdot').forEach((d,i)=>{
+    d.className = 'pdot' + (i+1<to?' done':i+1===to?' active':'');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════
+// VALIDATION
+// ══════════════════════════════════════
+function valid(n) {
+  const rules = {
+    1:[()=>g('f-name')&&g('f-what'),'Заполните название и описание деятельности'],
+    2:[()=>g('f-aud')&&S.goal,'Опишите клиента и выберите цель сайта'],
+    11:[()=>g('f-contact'),'Укажите контакт для связи'],
+  };
+  if(rules[n]){ const[c,m]=rules[n]; if(!c()){flash(m,true);return false;} }
+  return true;
+}
+
+function g(id){ return (document.getElementById(id)?.value||'').trim(); }
+
+// ══════════════════════════════════════
+// COLLECT
+// ══════════════════════════════════════
+function col(n) {
+  const map = {
+    1:()=>{ S.name=g('f-name');S.cursite=g('f-cursite');S.newdomain=g('f-newdomain');S.cname=g('f-cname');S.what=g('f-what');S.diff=g('f-diff');S.products=g('f-products'); },
+    2:()=>{ S.audience=g('f-aud');S.targetgroup=g('f-targetgroup');S.pain=g('f-pain');S.kpi=g('f-kpi'); },
+    3:()=>{ S.vscomp=g('f-vs'); S.comps=collectRefs('comp'); S.partners=collectRefs('partner'); },
+    4:()=>{ S.refs=collectRefs('ref'); S.screennote=g('f-screennote'); },
+    5:()=>{ S.brandcolors=g('f-brandcolors'); },
+    6:()=>{ S.persona=g('f-persona');S.tov=g('f-tov'); },
+    7:()=>{ S.nocolors=g('f-nocolors'); },
+    8:()=>{ S.structure=g('f-structure'); },
+    10:()=>{ /* selectors already updated */ },
+    11:()=>{ S.no=g('f-no');S.tech=g('f-tech');S.extra=g('f-extra');S.contact=g('f-contact');S.phone=g('f-phone'); },
+  };
+  if(map[n]) map[n]();
+}
+
+function collectRefs(prefix) {
+  const rows = document.querySelectorAll(`[data-ref-prefix="${prefix}"]`);
+  const result = [];
+  rows.forEach(row=>{
+    const url = row.querySelector('.ref-url')?.value.trim();
+    const note = row.querySelector('.ref-note')?.value.trim();
+    if(url||note) result.push({url:url||'', note:note||''});
+  });
+  return result;
+}
+
+// ══════════════════════════════════════
+// SELECTORS
+// ══════════════════════════════════════
+function p1(card) {
+  const k=card.dataset.k,v=card.dataset.v;
+  document.querySelectorAll(`[data-k="${k}"]`).forEach(c=>c.classList.remove('sel'));
+  card.classList.add('sel');
+  S[k]=v;
+}
+function pm(card) {
+  const k=card.dataset.k,v=card.dataset.v;
+  card.classList.toggle('sel');
+  if(!S[k]) S[k]=[];
+  S[k]=card.classList.contains('sel') ? [...S[k],v] : S[k].filter(x=>x!==v);
+}
+function md(tag) {
+  tag.classList.toggle('on');
+  const v=tag.dataset.v;
+  S.moods=tag.classList.contains('on') ? [...S.moods,v] : S.moods.filter(m=>m!==v);
+}
+function tog(row) {
+  row.classList.toggle('on');
+  const v=row.dataset.v;
+  S.blocks=row.classList.contains('on') ? [...S.blocks,v] : S.blocks.filter(x=>x!==v);
+}
+function pc(chip) {
+  document.querySelectorAll('.cchip').forEach(c=>c.classList.remove('on'));
+  chip.classList.add('on'); S.colorScheme=chip.dataset.v;
+}
+function ps(name,dot) {
+  document.querySelectorAll(`#${name} .sdot`).forEach(d=>d.classList.remove('on'));
+  dot.classList.add('on'); S[name]=dot.dataset.v;
+}
+function toggleAsset(card) {
+  card.classList.toggle('on');
+  const v=card.dataset.v;
+  S.assets=card.classList.contains('on') ? [...S.assets,v] : S.assets.filter(x=>x!==v);
+}
+
+// ══════════════════════════════════════
+// REFS TABLE
+// ══════════════════════════════════════
+function addRef(tableId, prefix) {
+  const table = document.getElementById(tableId);
+  const idx = table.querySelectorAll('.ref-row').length;
+  const ph = {
+    ref:   ['https://example.com', 'Что именно нравится — цвет, компоновка, типографика, ощущение'],
+    comp:  ['https://competitor.ru', 'Что нравится и что не нравится на этом сайте'],
+    partner:['https://partner.ru', 'Почему эта компания вам симпатична']
+  };
+  const row = document.createElement('div');
+  row.className = 'ref-row';
+  row.dataset.refPrefix = prefix;
+  row.innerHTML = `
+    <input type="text" class="ref-url" placeholder="${ph[prefix]?.[0]||'https://...'}">
+    <textarea class="ref-note" style="min-height:40px;resize:vertical" placeholder="${ph[prefix]?.[1]||'Комментарий'}"></textarea>
+    <button class="ref-del" onclick="this.closest('.ref-row').remove()" title="Удалить">×</button>
+  `;
+  table.appendChild(row);
+}
+
+// auto-add one ref row on load
+['ref-table','comp-table','partner-table'].forEach(id=>{
+  const prefix = id.replace('-table','').replace('comp','comp').replace('partner','partner').replace('ref','ref');
+  addRef(id, prefix);
+});
+
+// ══════════════════════════════════════
+// FILE UPLOAD
+// ══════════════════════════════════════
+const uploadedFiles = { prev1:[], prev2:[] };
+
+function files(input, previewId) {
+  const files = Array.from(input.files);
+  files.forEach(file => {
+    if(!file.type.startsWith('image/')) {
+      uploadedFiles[previewId].push({name:file.name, type:'file'});
+      renderPreviews(previewId);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      uploadedFiles[previewId].push({src:e.target.result, name:file.name, type:'image'});
+      renderPreviews(previewId);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderPreviews(previewId) {
+  const container = document.getElementById(previewId);
+  container.innerHTML = '';
+  uploadedFiles[previewId].forEach((f,i) => {
+    const el = document.createElement('div');
+    el.className = 'prev-item';
+    if(f.type==='image') {
+      el.innerHTML = `<img src="${f.src}" alt="${f.name}"><button class="prev-del" onclick="removeFile('${previewId}',${i})">×</button>`;
+    } else {
+      el.style.cssText='display:flex;align-items:center;justify-content:center;background:#f0ede8;font-size:11px;color:#888;padding:4px;text-align:center;word-break:break-all';
+      el.innerHTML = `<span>📎 ${f.name}</span><button class="prev-del" onclick="removeFile('${previewId}',${i})">×</button>`;
+    }
+    container.appendChild(el);
+  });
+  // Update state
+  if(previewId==='prev1') S.uploadedScreens = uploadedFiles.prev1.map(f=>f.name);
+  if(previewId==='prev2') S.uploadedBrand = uploadedFiles.prev2.map(f=>f.name);
+}
+
+function removeFile(previewId, idx) {
+  uploadedFiles[previewId].splice(idx,1);
+  renderPreviews(previewId);
+}
+
+function drag(e, over, id) {
+  e.preventDefault();
+  document.getElementById(id).classList.toggle('drag', over);
+}
+
+function drop(e, zoneId, previewId) {
+  e.preventDefault();
+  document.getElementById(zoneId).classList.remove('drag');
+  const dt = e.dataTransfer;
+  if(dt.files) {
+    const fakeInput = {files: dt.files};
+    files(fakeInput, previewId);
+  }
+}
+
+// ══════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════
+function submit() {
+  col(11);
+  if(!valid(11)) return;
+  showTY();
+  sendTG();
+}
+
+// ══════════════════════════════════════
+// THANK YOU
+// ══════════════════════════════════════
+const goalL={lead:'Получить заявку',call:'Позвонить / написать',buy:'Купить онлайн',subscribe:'Подписаться',trust:'Сформировать доверие',view:'Показать портфолио'};
+const devL={desktop:'С компьютера',mobile:'С телефона',both:'Везде'};
+
+function showTY() {
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('pfill').style.width='100%';
+  document.getElementById('snum').textContent='✓';
+  document.querySelectorAll('.pdot').forEach(d=>d.className='pdot done');
+
+  const rows=[
+    ['Проект', S.name],
+    S.what?['Деятельность', S.what.substring(0,120)+(S.what.length>120?'…':'')]:null,
+    S.goal?['Цель сайта', goalL[S.goal]||S.goal]:null,
+    S.audience?['Клиент', S.audience.substring(0,100)+'…']:null,
+    S.moods.length?['Настроение', S.moods]:null,
+    S.colorScheme?['Цвета', S.colorScheme]:null,
+    S.budget?['Бюджет', S.budget]:null,
+    S.timeline?['Сроки', S.timeline]:null,
+    ['Контакт', S.contact],
+  ].filter(Boolean);
+
+  document.getElementById('ty-rows').innerHTML = rows.map(([l,v])=>{
+    const val = Array.isArray(v) ? v.map(t=>`<span class="tag">${t}</span>`).join('') : (v||'—');
+    return `<div class="ty-row"><div class="ty-lbl">${l}</div><div class="ty-val">${val}</div></div>`;
+  }).join('');
+
+  const ty=document.getElementById('ty');
+  ty.style.display='block'; ty.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════
+// PROMPT BUILD + TELEGRAM
+// ══════════════════════════════════════
+function buildPrompt() {
+  const densL={'1':'предельно минималистичный — максимум воздуха','2':'лаконичный','3':'сбалансированный','4':'насыщенный','5':'максимально детализированный'};
+  const lines = [];
+
+  lines.push(`ТИП ПРОЕКТА\n${S.siteType||'Не указан'}`,'');
+
+  // О компании
+  const co=[];
+  co.push(`Название: ${S.name}`);
+  if(S.cursite) co.push(`Текущий сайт: ${S.cursite}`);
+  if(S.newdomain) co.push(`Планируемый домен: ${S.newdomain}`);
+  co.push(`Деятельность: ${S.what}`);
+  if(S.diff) co.push(`Главное отличие от конкурентов: ${S.diff}`);
+  if(S.products) co.push(`Продукты и услуги: ${S.products}`);
+  lines.push(`О КОМПАНИИ\n${co.join('\n')}`,'');
+
+  // Аудитория и цели
+  const au=[];
+  au.push(`Идеальный клиент: ${S.audience}`);
+  if(S.targetgroup) au.push(`Целевая группа: ${S.targetgroup}`);
+  if(S.pain) au.push(`Боль / страх клиента: ${S.pain}`);
+  if(S.goal) au.push(`Главная цель: ${goalL[S.goal]||S.goal}`);
+  if(S.kpi) au.push(`Желаемый результат / KPI: ${S.kpi}`);
+  if(S.device) au.push(`Устройство: ${devL[S.device]||S.device}`);
+  lines.push(`АУДИТОРИЯ И ЦЕЛИ\n${au.join('\n')}`,'');
+
+  // Конкуренты
+  if(S.comps?.length) {
+    const cl=S.comps.filter(c=>c.url||c.note).map(c=>`  • ${c.url}${c.note?' — '+c.note:''}`).join('\n');
+    if(cl) lines.push(`КОНКУРЕНТЫ\n${cl}`,'');
+  }
+  if(S.partners?.length) {
+    const pl=S.partners.filter(c=>c.url||c.note).map(c=>`  • ${c.url}${c.note?' — '+c.note:''}`).join('\n');
+    if(pl) lines.push(`ПАРТНЁРЫ И СИМПАТИЧНЫЕ КОМПАНИИ\n${pl}`,'');
+  }
+  if(S.vscomp) lines.push(`ЧЕМ ДОЛЖЕН ОТЛИЧАТЬСЯ ОТ КОНКУРЕНТОВ\n${S.vscomp}`,'');
+
+  // Референсы
+  if(S.refs?.length) {
+    const rl=S.refs.filter(r=>r.url||r.note).map(r=>`  • ${r.url}${r.note?' — '+r.note:''}`).join('\n');
+    if(rl) lines.push(`ВИЗУАЛЬНЫЕ РЕФЕРЕНСЫ\n${rl}`,'');
+  }
+  if(S.screennote) lines.push(`КОММЕНТАРИЙ К СКРИНШОТАМ\n${S.screennote}`,'');
+  if(S.uploadedScreens?.length) lines.push(`ЗАГРУЖЕННЫЕ СКРИНШОТЫ\n${S.uploadedScreens.map(n=>'  • '+n).join('\n')}`,'');
+
+  // Фирменный стиль
+  if(S.assets?.length||S.brandcolors) {
+    const br=[];
+    if(S.assets?.length) br.push(`Есть: ${S.assets.join(', ')}`);
+    if(S.brandcolors) br.push(`Цвета бренда: ${S.brandcolors}`);
+    if(S.uploadedBrand?.length) br.push(`Загруженные файлы: ${S.uploadedBrand.join(', ')}`);
+    lines.push(`ФИРМЕННЫЙ СТИЛЬ\n${br.join('\n')}`,'');
+  }
+
+  // Характер
+  const ch=[];
+  if(S.moods?.length) ch.push(`Настроение: ${S.moods.join(', ')}`);
+  if(S.persona) ch.push(`Бренд как человек: ${S.persona}`);
+  if(S.tov) ch.push(`Tone of voice: ${S.tov}`);
+  if(ch.length) lines.push(`ХАРАКТЕР БРЕНДА\n${ch.join('\n')}`,'');
+
+  // Визуальный стиль
+  const vs=[];
+  if(S.colorScheme) vs.push(`Цветовая схема: ${S.colorScheme}`);
+  if(S.nocolors) vs.push(`Запрещённые цвета: ${S.nocolors}`);
+  if(S.density) vs.push(`Насыщенность: ${densL[S.density]||S.density}`);
+  if(S.styletype) vs.push(`Стилистика: ${S.styletype}`);
+  vs.push('Типографика: использовать выразительный шрифт с характером — не Inter, Roboto, Arial');
+  lines.push(`ВИЗУАЛЬНЫЙ СТИЛЬ\n${vs.join('\n')}`,'');
+
+  // Структура
+  if(S.blocks?.length) {
+    lines.push(`СТРУКТУРА САЙТА\n${S.blocks.map((b,i)=>`${i+1}. ${b}`).join('\n')}`,'');
+  }
+  if(S.structure) lines.push(`СТРУКТУРА (СВОИМИ СЛОВАМИ)\n${S.structure}`,'');
+
+  // Функции
+  if(S.features?.length) lines.push(`ФУНКЦИОНАЛЬНОСТЬ\n${S.features.map(f=>'— '+f).join('\n')}`,'');
+  if(S.support) lines.push(`ПОДДЕРЖКА САЙТА ПОСЛЕ ЗАПУСКА\n${S.support}`,'');
+
+  // Бюджет и сроки
+  const bs=[];
+  if(S.budget) bs.push(`Бюджет: ${S.budget}`);
+  if(S.timeline) bs.push(`Сроки: ${S.timeline}`);
+  if(S.seo) bs.push(`SEO: ${S.seo}`);
+  if(S.ads) bs.push(`Реклама: ${S.ads}`);
+  if(bs.length) lines.push(`БЮДЖЕТ И СРОКИ\n${bs.join('\n')}`,'');
+
+  // Запреты
+  const no=[];
+  if(S.no) no.push(S.no);
+  no.push('никаких фиолетовых / синих градиентов','никаких стоковых иллюстраций','сайт не должен выглядеть как типичный AI-сайт','никаких шрифтов Inter Roboto Arial','нестандартная компоновка хотя бы в одном блоке');
+  lines.push(`ЗАПРЕТЫ\n${no.map(n=>'— '+n).join('\n')}`,'');
+
+  if(S.tech) lines.push(`ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ\n${S.tech}`,'');
+  if(S.extra) lines.push(`ДОПОЛНИТЕЛЬНО\n${S.extra}`,'');
+
+  lines.push(`ДОПОЛНИТЕЛЬНЫЕ ТРЕБОВАНИЯ К ДИЗАЙНУ\n— Крупный выразительный заголовок на первом экране\n— Много воздуха между блоками\n— Мобильная версия обязательна\n— Сайт не должен выглядеть шаблонно`);
+
+  return lines.join('\n');
+}
+
+async function sendTG() {
+  const prompt = buildPrompt();
+  const body = new FormData();
+  body.append('_subject', '🔥 Новый бриф на сайт — ' + (S.name||'без названия'));
+  body.append('Клиент', S.cname||'—');
+  body.append('Контакт', S.contact + (S.phone?' | '+S.phone:''));
+  body.append('Компания', S.name||'—');
+  body.append('Тип сайта', S.siteType||'—');
+  body.append('ПРОМПТ ДЛЯ CLAUDE DESIGN', prompt);
+  body.append('_replyto', S.contact||'');
+
+  try {
+    const res = await fetch(FORMSPREE_URL, {
+      method: 'POST',
+      body: body,
+      headers: { 'Accept': 'application/json' }
+    });
+    const data = await res.json();
+    if(!data.ok) console.error('Formspree error:', data);
+  } catch(e){ console.error('Email error:',e); }
+}
+
+// ══════════════════════════════════════
+// FLASH
+// ══════════════════════════════════════
+function flash(msg, err=false) {
+  const el=document.getElementById('flash');
+  el.textContent=msg;
+  el.className=err?'err':'';
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none', 2800);
+}
+</script>
+</body>
+</html>
